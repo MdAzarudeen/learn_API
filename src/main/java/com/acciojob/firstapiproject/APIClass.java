@@ -3,7 +3,9 @@ package com.acciojob.firstapiproject;
 
 import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +17,35 @@ import java.util.List;
 public class APIClass {
 
     HashMap<Integer,UserInfo> userInfoDb = new HashMap<>();
+
+    @PostMapping("/addUserViaReqBody")
+    public String addUser(@RequestBody UserInfo obj) {
+
+        int key = obj.getUserId();
+        userInfoDb.put(key,obj);
+
+        return "The user has been added via Postman Object";
+    }
+
+
+    @GetMapping("/getUser/{userId}")
+    public UserInfo getUserInfo(@PathVariable("userId")Integer userId){
+        UserInfo object = userInfoDb.get(userId);
+        return object;
+    }
+
+    @GetMapping("/getUsers/{greaterAge}/{lessThanAge}")
+    public List<UserInfo> getUsers(@PathVariable("greaterAge")int greaterAge,@PathVariable("lessThanAge")int lessThanAge){
+        List<UserInfo> ansList = new ArrayList<>();
+        for(UserInfo userInfo : userInfoDb.values()){
+            if(userInfo.getAge()>=greaterAge && userInfo.getAge()<= lessThanAge){
+                ansList.add(userInfo);
+            }
+        }
+        return ansList;
+
+    }
+
 
 
     @PostMapping("/addUser")
