@@ -1,6 +1,7 @@
 package com.acciojob.firstapiproject;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import java.util.List;
 @Service
 public class ServiceLayer {
 
-    RepositoryLayer repositoryLayerObj = new RepositoryLayer();
+    @Autowired
+    private RepositoryLayer repositoryLayerObj;
 
 
     public String addUser(UserInfo userInfo){

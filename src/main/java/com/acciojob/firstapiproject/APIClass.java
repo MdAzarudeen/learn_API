@@ -2,10 +2,13 @@ package com.acciojob.firstapiproject;
 
 
 import org.apache.catalina.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,35 +17,42 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class APIClass {
 
     HashMap<Integer,UserInfo> userInfoDb = new HashMap<>();
 
     @PostMapping("/addUserViaReqBody")
-    public String addUser(@RequestBody UserInfo obj) {
+    public ResponseEntity<String> addUser(@RequestBody UserInfo obj) {
 
         int key = obj.getUserId();
         userInfoDb.put(key,obj);
 
-        return "The user has been added via Postman Object";
+
+
+        String resultString = "The user has been added via Postman Object";
+
+        return new ResponseEntity<>(resultString, HttpStatus.PRECONDITION_FAILED);
     }
 
 
     @GetMapping("/getUser/{userId}")
-    public UserInfo getUserInfo(@PathVariable("userId")Integer userId){
+    public ResponseEntity<UserInfo> getUserInfo(@PathVariable("userId")Integer userId){
         UserInfo object = userInfoDb.get(userId);
-        return object;
+        return new ResponseEntity<>(object,HttpStatus.ACCEPTED);
+
     }
 
     @GetMapping("/getUsers/{greaterAge}/{lessThanAge}")
-    public List<UserInfo> getUsers(@PathVariable("greaterAge")int greaterAge,@PathVariable("lessThanAge")int lessThanAge){
+    public ResponseEntity<List<UserInfo> > getUsers(@PathVariable("greaterAge")int greaterAge,@PathVariable("lessThanAge")int lessThanAge){
         List<UserInfo> ansList = new ArrayList<>();
         for(UserInfo userInfo : userInfoDb.values()){
             if(userInfo.getAge()>=greaterAge && userInfo.getAge()<= lessThanAge){
                 ansList.add(userInfo);
             }
         }
-        return ansList;
+
+        return new ResponseEntity<>(ansList,HttpStatus.OK);
 
     }
 
